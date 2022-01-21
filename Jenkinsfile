@@ -1,37 +1,35 @@
 pipeline {
-    agent none
+    agent any
     stages {
-	
-	stage('Non-Parallel Stage') {
-	    agent {
-                        label "master"
-                }
+	stage('Git-Checkout') {
         steps {
-                echo 'This stage will be executed first'
-                }
+                echo 'Checking out from Git Repo';
+                git 'https://github.com/simplilearn-github/Pipeline_Script.git';
+            }
         }
-
-	
-        stage('Run Tests') {
-            parallel {
-                stage('Test On Windows') {
-                    agent {
-                        label "Windows_Node"
-                    }
-                    steps {
-                        echo "Task1 on Agent"
-                    }
-                    
-                }
-                stage('Test On Master') {
-                    agent {
-                        label "master"
-                    }
-                    steps {
-						echo "Task1 on Master"
-					}
-                }
+        stage('Build') {
+            steps {
+                echo 'Building the check out project';
+                bat 'Build.bat';
+            }
+        }
+        stage('Unit-Test') {
+            steps {
+                echo 'Running JUnit Test';
+                bat 'Test.bat';
+            }
+        }
+        stage('Quality-Gate') {
+            steps {
+                echo 'Verifying Quality Gates';
+                bat 'Quality.bat';
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying to stage environment for more tests!';
+                bat 'Deploy.bat';
             }
         }
     }
-}
+} 
