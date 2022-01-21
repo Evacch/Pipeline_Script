@@ -18,7 +18,7 @@ pipeline {
     stage('Unit-Test') {
       steps {
         echo 'Running JUnit Test'
-        bat 'Test.bat'
+        bat 'Unit.bat'
       }
     }
 
